@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:prototype_upwork/done.dart';
+import 'package:prototype_upwork/confirmation_information.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
-import 'package:prototype_upwork/utils/pin_entry_text_field.dart';
 
-class EnterPin extends StatefulWidget {
-  EnterPin({Key key, this.title}) : super(key: key);
+class EnterBarcode extends StatefulWidget {
+  EnterBarcode({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _EnterPinState createState() => _EnterPinState();
+  _EnterBarcodeState createState() => _EnterBarcodeState();
 }
 
-class _EnterPinState extends State<EnterPin> {
+class _EnterBarcodeState extends State<EnterBarcode> {
   var controller = new TextEditingController();
+
+  var textController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +29,38 @@ class _EnterPinState extends State<EnterPin> {
         child: new Container(
           margin: EdgeInsets.all(15),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              new Text(
-                'Almost there! Please add your 6 digit PIN to confirm payment.',
+              new TextField(
+                controller: textController,
+                style: new TextStyle(fontSize: largeText, color: Colors.black),
+                keyboardType: TextInputType.number,
+                maxLines: 1,
                 textAlign: TextAlign.center,
-                style: new TextStyle(fontSize: xLargeText),
+                decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(5.0),
+                      ),
+                      borderSide: new BorderSide(
+                        color: Colors.black,
+                        width: 1.0,
+                      ),
+                    ),
+                    labelStyle: new TextStyle(fontSize: smallText),
+                    prefixStyle:
+                        new TextStyle(color: Colors.black, fontSize: largeText),
+                    hintText: 'Barcode number'),
               ),
               xLargePaddingFromTop(),
-              PinCodeTextField(
-                controller: controller,
-                hideCharacter: false,
-                highlight: true,
-                highlightColor: Colors.blue,
-                defaultBorderColor: Colors.black,
-                hasTextBorderColor: Colors.blue,
-                maxLength: 6,
-                pinTextStyle: TextStyle(fontSize: xLargeText),
-                pinTextAnimatedSwitcherDuration: Duration(milliseconds: 500),
+              new Text(
+                'You can type your bar code here',
+                textAlign: TextAlign.center,
+                style: new TextStyle(fontSize: mediumText),
               ),
-              xLargePaddingFromTop(),
+              Padding(padding: EdgeInsets.only(top: 70)),
               new Row(
                 children: <Widget>[
                   Expanded(
@@ -80,9 +93,9 @@ class _EnterPinState extends State<EnterPin> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Completed(
-                                      title: 'Process done',
-                                    )),
+                              builder: (context) => ConfirmationInformation(
+                                  title: 'Confirm Information'),
+                            ),
                           );
                         },
                       ),

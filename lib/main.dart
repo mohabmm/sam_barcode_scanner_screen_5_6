@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prototype_upwork/confirmation_information.dart';
+import 'package:prototype_upwork/enter_barcode.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,8 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ConfirmationInformation(title: 'Confirm Information'),
-      // home: EnterPin(title: 'Enter Pin'),
+      home: EnterBarcode(title: 'Type In Bar Code'),
     );
   }
 }
