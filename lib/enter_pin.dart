@@ -13,6 +13,8 @@ class EnterPin extends StatefulWidget {
 }
 
 class _EnterPinState extends State<EnterPin> {
+  var controller = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,29 +36,47 @@ class _EnterPinState extends State<EnterPin> {
                 style: new TextStyle(fontSize: xLargeText),
               ),
               xLargePaddingFromTop(),
-              PinEntryTextField(
-                inputStyle: new TextStyle(fontSize: xLargeText, color: Colors.black),
-                fontSize: xLargeText,
-                inputDecoration: InputDecoration(
-                  border: new OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(0.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-
-                onSubmit: (String pin) {
-                   Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Completed(title: 'Process done',)),
-                          );
-                 
-                }, // end onSubmit
+                PinCodeTextField(
+                  controller: controller,
+                  hideCharacter: false,
+                  highlight: true,
+                  highlightColor: Colors.blue,
+                  defaultBorderColor: Colors.black,
+                  hasTextBorderColor: Colors.blue,
+                  maxLength: 6,
+                  // hasError: hasError,
+                  // onTextChanged: (text) {
+                  //   setState(() {
+                  //     hasError = false;
+                  //   });
+                  // },
+                  pinTextStyle: TextStyle(fontSize: xLargeText),
+                  // pinTextAnimatedSwitcherTransition: PinCodeTextField.defaultScalingTransition,
+                  pinTextAnimatedSwitcherDuration: Duration(milliseconds: 500),
               ),
+              // PinEntryTextField(
+              //   inputStyle: new TextStyle(fontSize: xLargeText, color: Colors.black),
+              //   fontSize: xLargeText,
+              //   inputDecoration: InputDecoration(
+              //     border: new OutlineInputBorder(
+              //       borderRadius: const BorderRadius.all(
+              //         const Radius.circular(0.0),
+              //       ),
+              //       borderSide: new BorderSide(
+              //         color: Colors.black,
+              //         width: 1.0,
+              //       ),
+              //     ),
+              //   ),
+
+              //   onSubmit: (String pin) {
+              //      Navigator.push(
+              //               context,
+              //               MaterialPageRoute(builder: (context) => Completed(title: 'Process done',)),
+              //             );
+
+              //   }, // end onSubmit
+              // ),
               xLargePaddingFromTop(),
               new Row(
                 children: <Widget>[
@@ -81,15 +101,18 @@ class _EnterPinState extends State<EnterPin> {
                             ),
                             Text(
                               "Confirm",
-                              style:
-                                  TextStyle(fontSize: xLargeText, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: xLargeText, color: Colors.white),
                             ),
                           ],
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Completed(title: 'Process done',)),
+                            MaterialPageRoute(
+                                builder: (context) => Completed(
+                                      title: 'Process done',
+                                    )),
                           );
                         },
                       ),
@@ -121,8 +144,8 @@ class _EnterPinState extends State<EnterPin> {
                             ),
                             Text(
                               "Cancel",
-                              style:
-                                  TextStyle(fontSize: xLargeText, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: xLargeText, color: Colors.white),
                             ),
                           ],
                         ),
