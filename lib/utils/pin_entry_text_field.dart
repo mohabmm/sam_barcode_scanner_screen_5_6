@@ -13,7 +13,7 @@ class PinEntryTextField extends StatefulWidget {
   PinEntryTextField(
       {this.fields: 6,
         this.onSubmit,
-        this.fieldWidth: 60.0,
+        this.fieldWidth: 40.0,
         this.fontSize: 40.0,
         this.isTextObscure: true,
         this.inputStyle,
