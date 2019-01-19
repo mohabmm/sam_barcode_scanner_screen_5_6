@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
 
 class Completed extends StatefulWidget {
@@ -13,6 +14,10 @@ class Completed extends StatefulWidget {
 class _CompletedState extends State<Completed> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+   DeviceOrientation.portraitDown,
+   DeviceOrientation.portraitUp,
+]);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

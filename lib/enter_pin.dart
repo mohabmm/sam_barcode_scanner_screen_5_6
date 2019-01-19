@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:prototype_upwork/done.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
 import 'package:prototype_upwork/utils/pin_entry_text_field.dart';
@@ -17,6 +18,10 @@ class _EnterPinState extends State<EnterPin> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

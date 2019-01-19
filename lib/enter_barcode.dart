@@ -1,4 +1,10 @@
+import 'dart:_http';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:prototype_upwork/barcode_scanner.dart';
 import 'package:prototype_upwork/confirmation_information.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
 
@@ -18,12 +24,25 @@ class _EnterBarcodeState extends State<EnterBarcode> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
           widget.title,
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.camera_alt),
+            tooltip: 'Scan',
+            onPressed: () {
+              _navigateAndDisplaySelection(context);
+            },
+          ),
+        ],
       ),
       body: new SingleChildScrollView(
         child: new Container(
@@ -90,13 +109,7 @@ class _EnterBarcodeState extends State<EnterBarcode> {
                           ],
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ConfirmationInformation(
-                                  title: 'Confirm Information'),
-                            ),
-                          );
+                          sendRequest(textController.text);
                         },
                       ),
                     ),
@@ -139,11 +152,85 @@ class _EnterBarcodeState extends State<EnterBarcode> {
                     ),
                   )
                 ],
-              )
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  sendRequest(String barcode) async {
+    print(textController.text);
+    Map map = {"barcodeNum": barcode};
+
+    var url = 'http://localhost:4567/barcodeLookup';
+
+    String response = await apiRequest(url, map);
+
+    var data = json.decode(response);
+    if (data['result'] == 'ok') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              ConfirmationInformation(title: 'Confirm Information'),
+        ),
+      );
+    } else {
+      invalidBarcodeDialog();
+    }
+  }
+
+  Future<String> apiRequest(String url, Map jsonMap) async {
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+    HttpClientResponse response = await request.close();
+    // todo - you should check the response.statusCode
+    String reply = await response.transform(utf8.decoder).join();
+    httpClient.close();
+    return reply;
+  }
+
+  void invalidBarcodeDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: new Text("Invalid barcode"),
+            content: new Text("Please ente valid barcode"),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text("Ok"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void openScanningScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BarcodeScanner(),
+      ),
+    );
+  }
+
+  void _navigateAndDisplaySelection(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BarcodeScanner()),
+    );
+
+    sendRequest(result);
+
   }
 }

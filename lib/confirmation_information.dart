@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:prototype_upwork/enter_pin.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
 
@@ -25,6 +26,11 @@ class _ConfirmationInformationState extends State<ConfirmationInformation> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setPreferredOrientations([
+   DeviceOrientation.portraitDown,
+   DeviceOrientation.portraitUp,
+]);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
