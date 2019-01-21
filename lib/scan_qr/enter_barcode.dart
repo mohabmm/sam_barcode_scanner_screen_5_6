@@ -5,8 +5,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scanner_package/barcode_scanner.dart';
-import 'package:scanner_package/utils/const_widgets.dart';
+import 'package:prototype_upwork/scan_qr/barcode_scanner.dart';
+import 'package:prototype_upwork/utils/const_widgets.dart';
+import 'package:scanner_lib_android/flutter_mobile_vision.dart';
 
 typedef SendCallback = void Function(bool valid);
 
@@ -25,9 +26,18 @@ class _EnterBarcodeState extends State<EnterBarcode> {
 
   var textController = new TextEditingController();
 
+  var _cameraBarcode;
+
+  Size _previewBarcode;
+
+  List<Barcode> _barcodes;
+
   @override
   void initState() {
     super.initState();
+    FlutterMobileVision.start().then((previewSizes) => setState(() {
+          _previewBarcode = previewSizes[_cameraBarcode].first;
+        }));
     textController.text = '846900000007511401090119003629373055001098054727';
   }
 
@@ -47,9 +57,16 @@ class _EnterBarcodeState extends State<EnterBarcode> {
           IconButton(
             icon: Icon(Icons.camera_alt),
             tooltip: 'Scan',
-            onPressed: () {
-              _navigateAndDisplaySelection(context);
-            },
+            // onPressed: _scan,
+           onPressed: () {
+             if(Platform.isAndroid)
+             {
+               _scan();
+             }
+             else{
+             _navigateAndDisplaySelection(context);
+             }
+           },
           ),
         ],
       ),
@@ -230,5 +247,30 @@ class _EnterBarcodeState extends State<EnterBarcode> {
     textController.text = result;
 //    setState(() {});
     sendRequest(result);
+  }
+
+  Future<Null> _scan() async {
+    List<Barcode> barcodes = [];
+    try {
+      barcodes = await FlutterMobileVision.scan(
+        flash: false,
+        autoFocus: true,
+        formats: Barcode.ALL_FORMATS,
+        multiple: false,
+        waitTap: false,
+        showText: false,
+        preview: _previewBarcode,
+        camera: FlutterMobileVision.CAMERA_BACK,
+        fps: 15.0,
+      );
+    } on Exception {
+      barcodes.add(new Barcode('Failed to get barcode.'));
+    }
+
+    if (!mounted) return;
+      _barcodes = barcodes;
+      textController.text = _barcodes[0].displayValue;
+//    setState(() {});
+      sendRequest(_barcodes[0].displayValue);
   }
 }
