@@ -23,7 +23,7 @@ dependencies:
 
 dev_dependencies:
   scanner_package:
-    path: ../scanner_package
+    path: scanner_package
   flutter_test:
     sdk: flutter
 
