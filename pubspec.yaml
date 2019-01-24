@@ -24,8 +24,8 @@ dependencies:
 
 
 dev_dependencies:
-  scanner_lib_android:
-    path: scanner_lib_android
+  fzxing:
+    path: fzxing
   flutter_test:
     sdk: flutter
 

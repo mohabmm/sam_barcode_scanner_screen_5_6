@@ -5,9 +5,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fzxing/fzxing.dart';
 import 'package:prototype_upwork/scan_qr/barcode_scanner.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
-import 'package:scanner_lib_android/flutter_mobile_vision.dart';
 
 typedef SendCallback = void Function(bool valid);
 
@@ -26,19 +26,10 @@ class _EnterBarcodeState extends State<EnterBarcode> {
 
   var textController = new TextEditingController();
 
-  var _cameraBarcode;
-
-  Size _previewBarcode;
-
-  List<Barcode> _barcodes;
-
   @override
   void initState() {
     super.initState();
-    FlutterMobileVision.start().then((previewSizes) => setState(() {
-          _previewBarcode = previewSizes[_cameraBarcode].first;
-        }));
-    textController.text = '846900000007511401090119003629373055001098054727';
+//    textController.text = '846900000007511401090119003629373055001098054727';
   }
 
   @override
@@ -58,15 +49,13 @@ class _EnterBarcodeState extends State<EnterBarcode> {
             icon: Icon(Icons.camera_alt),
             tooltip: 'Scan',
             // onPressed: _scan,
-           onPressed: () {
-             if(Platform.isAndroid)
-             {
-               _scan();
-             }
-             else{
-             _navigateAndDisplaySelection(context);
-             }
-           },
+            onPressed: () {
+              if (Platform.isAndroid) {
+                _scan();
+              } else {
+                _navigateAndDisplaySelection(context);
+              }
+            },
           ),
         ],
       ),
@@ -188,7 +177,6 @@ class _EnterBarcodeState extends State<EnterBarcode> {
 
   sendRequest(String barcode) async {
     if (barcode.length > 0) {
-      print('libe call $barcode');
       Map map = {"barcodeNum": barcode};
 
       var url = 'http://localhost:4567/barcodeLookup';
@@ -250,27 +238,47 @@ class _EnterBarcodeState extends State<EnterBarcode> {
   }
 
   Future<Null> _scan() async {
-    List<Barcode> barcodes = [];
+    List<String> _barcode;
     try {
-      barcodes = await FlutterMobileVision.scan(
-        flash: false,
-        autoFocus: true,
-        formats: Barcode.ALL_FORMATS,
-        multiple: false,
-        waitTap: false,
-        showText: false,
-        preview: _previewBarcode,
-        camera: FlutterMobileVision.CAMERA_BACK,
-        fps: 15.0,
-      );
-    } on Exception {
-      barcodes.add(new Barcode('Failed to get barcode.'));
+      Fzxing.scan(isBeep: true, isContinuous: false).then((barcodeResult) {
+        print("flutter size:" + barcodeResult?.toString());
+        setState(() {
+          _barcode = barcodeResult;
+          textController.text = _barcode[0];
+          sendRequest(_barcode[0]);
+//    setState(() {});toString
+//    sendRequest(_barcodes[0].displayValue);
+        });
+      });
+    } on PlatformException {
+      _barcode.add('Failed to get barcode.');
     }
-
-    if (!mounted) return;
-      _barcodes = barcodes;
-      textController.text = _barcodes[0].displayValue;
-//    setState(() {});
-      sendRequest(_barcodes[0].displayValue);
+//    List<Barcode> barcodes = [];
+//    try {
+//      barcodes = await FlutterMobileVision.scan(
+//        flash: false,
+//        autoFocus: true,
+//        formats: Barcode.ALL_FORMATS,
+//        multiple: false,
+//        waitTap: false,
+//        showText: true,
+////        preview: _previewBarcode,
+//        camera: FlutterMobileVision.CAMERA_BACK,
+//        fps: 15.0,
+//      );
+//    } on Exception {
+//      barcodes.add(new Barcode('Failed to get barcode.'));
+//    }
+//
+//    if (!mounted) return;
+//    _barcodes = barcodes;
+//    String barcodeString = '';
+//    for (Barcode barcode in _barcodes) {
+//      print(barcode.displayValue);
+//      barcodeString = barcodeString + barcode.displayValue;
+//    }
+//    textController.text = barcodeString;
+////    setState(() {});
+//    sendRequest(_barcodes[0].displayValue);
   }
 }
