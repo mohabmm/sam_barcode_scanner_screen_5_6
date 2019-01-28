@@ -30,7 +30,7 @@ class _EnterBarcodeState extends State<EnterBarcode> {
   @override
   void initState() {
     super.initState();
-    // textController.text = '03399033204451350000740106501014977770000280385';
+    textController.text = '03399033204451350000740106501014977770000280385';
   }
 
   @override
@@ -182,10 +182,10 @@ class _EnterBarcodeState extends State<EnterBarcode> {
     if (barcode.length > 0) {
       Map map = {"barcodeNum": barcode};
 
-      var url = 'http://localhost:4567/barcodeLookup';
+      //var url = 'http://localhost:4567/barcodeLookup';
 
       // this one is recommended to use if you are testing on Emulator
-      //var url = 'http://' + '10.0.2.2' + ':4567/barcodeLookup';
+      var url = 'http://' + '10.0.2.2' + ':4567/barcodeLookup';
 
       String response = await apiRequest(url, map);
 

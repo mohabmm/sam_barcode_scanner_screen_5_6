@@ -65,6 +65,7 @@ class _EnterPinState extends State<EnterPin> {
                 dueDate: widget.dueDate,
                 controller: controller,
                 hideCharacter: true,
+                maskCharacter: "*",
                 highlight: false,
                 textInputType: TextInputType.number,
                 highlightColor: Colors.blue,

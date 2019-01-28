@@ -207,7 +207,7 @@ class PinCodeTextFieldState extends State<PinCodeTextField> {
         cursorColor: Colors.transparent,
         maxLength: widget.maxLength,
         onChanged: _onTextChanged,
-        obscureText: true,
+        //obscureText: true,
       ),
     );
   }
