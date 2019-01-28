@@ -4,38 +4,44 @@ import 'package:prototype_upwork/enter_pin.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
 
 class ConfirmationInformation extends StatefulWidget {
-  ConfirmationInformation({Key key, this.title}) : super(key: key);
+  ConfirmationInformation(this.status, {Key key}) : super(key: key);
 
-  final String title;
+  bool status;
 
   @override
   _ConfirmationInformationState createState() =>
-      _ConfirmationInformationState();
+      _ConfirmationInformationState(status);
 }
 
 class _ConfirmationInformationState extends State<ConfirmationInformation> {
   bool today = true;
   bool dueDate = false;
+  bool status;
+  String company = 'ELECTRICITY COMPANY';
 
   var textController = new TextEditingController();
+  var bancktextController = new TextEditingController();
+
+  _ConfirmationInformationState(this.status);
 
   void initState() {
     super.initState();
     textController.text = "22.2";
+    bancktextController.text = "Santander";
+    print("the status is at confirmation" + " " + status.toString());
   }
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setPreferredOrientations([
-   DeviceOrientation.portraitDown,
-   DeviceOrientation.portraitUp,
-]);
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          widget.title,
+          "Confirnmation Information",
         ),
       ),
       body: new SingleChildScrollView(
@@ -56,33 +62,91 @@ class _ConfirmationInformationState extends State<ConfirmationInformation> {
               ),
               smallPaddingFromTop(),
               new Text(
-                'ELECTRICITY COMPANY',
+                company,
                 style: new TextStyle(fontSize: mediumText),
               ),
               xLargePaddingFromTop(),
+              (status == true)
+                  ? new TextField(
+                      controller: textController,
+                      enabled: true,
+                      style: new TextStyle(
+                          fontSize: largeText, color: Colors.black),
+                      keyboardType: TextInputType.number,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(5.0),
+                            ),
+                            borderSide: new BorderSide(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                          ),
+                          prefixText: 'R\$ ',
+                          labelText: 'Amount',
+                          labelStyle: new TextStyle(fontSize: smallText),
+                          prefixStyle: new TextStyle(
+                              color: Colors.black, fontSize: largeText),
+                          hintText: '0.0'),
+                    )
+                  : new TextField(
+                      controller: textController,
+                      enabled: false,
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                      },
+                      style: new TextStyle(
+                          fontSize: largeText, color: Colors.black),
+                      keyboardType: TextInputType.number,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(5.0),
+                            ),
+                            borderSide: new BorderSide(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                          ),
+                          prefixText: 'R\$ ',
+                          labelText: 'Amount',
+                          labelStyle: new TextStyle(fontSize: smallText),
+                          prefixStyle: new TextStyle(
+                              color: Colors.black, fontSize: largeText),
+                          hintText: '0.0'),
+                    ),
+              xLargePaddingFromTop(),
               new TextField(
-                controller: textController,
+                controller: bancktextController,
+                enabled: false,
+                onTap: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                },
                 style: new TextStyle(fontSize: largeText, color: Colors.black),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
                 maxLines: 1,
                 decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(5.0),
-                      ),
-                      borderSide: new BorderSide(
-                        color: Colors.black,
-                        width: 1.0,
-                      ),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                  border: new OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(5.0),
                     ),
-                    prefixText: 'R\$ ',
-                    labelText: 'Amount',
-                    labelStyle: new TextStyle(fontSize: smallText),
-                    prefixStyle:
-                        new TextStyle(color: Colors.black, fontSize: largeText),
-                    hintText: '0.0'),
+                    borderSide: new BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                  ),
+                  labelText: 'Emited by',
+                  labelStyle: new TextStyle(fontSize: smallText),
+                ),
               ),
               xLargePaddingFromTop(),
               new Text(
@@ -316,6 +380,10 @@ class _ConfirmationInformationState extends State<ConfirmationInformation> {
       MaterialPageRoute(
           builder: (context) => EnterPin(
                 title: 'Enter PIN',
+                amount: textController.text,
+                paidTo: company,
+                emittedBy: bancktextController.text,
+                dueDate: "22 Jan 2019",
               )),
     );
   }

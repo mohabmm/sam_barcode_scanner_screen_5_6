@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:prototype_upwork/done.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
 import 'package:prototype_upwork/utils/pin_entry_text_field.dart';
 
 class EnterPin extends StatefulWidget {
-  EnterPin({Key key, this.title}) : super(key: key);
+  EnterPin({
+    Key key,
+    this.title,
+    this.amount,
+    this.paidTo,
+    this.emittedBy,
+    this.dueDate,
+  }) : super(key: key);
 
   final String title;
+  final String amount;
+  final String paidTo;
+  final String emittedBy;
+  final String dueDate;
 
   @override
-  _EnterPinState createState() => _EnterPinState();
+  _EnterPinState createState() =>
+      _EnterPinState(amount, paidTo, emittedBy, dueDate);
 }
 
 class _EnterPinState extends State<EnterPin> {
   var controller = new TextEditingController();
+  final String amount;
+  final String paidTo;
+  final String emittedBy;
+  final String dueDate;
+
+  _EnterPinState(this.amount, this.paidTo, this.emittedBy, this.dueDate);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +48,7 @@ class _EnterPinState extends State<EnterPin> {
       ),
       body: new SingleChildScrollView(
         child: new Container(
-          margin: EdgeInsets.all(15),
+          margin: EdgeInsets.only(top: 15, left: 15.0, right: 15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -42,9 +59,14 @@ class _EnterPinState extends State<EnterPin> {
               ),
               xLargePaddingFromTop(),
               PinCodeTextField(
+                amount: widget.amount,
+                paidTo: widget.paidTo,
+                emitedBy: widget.emittedBy,
+                dueDate: widget.dueDate,
                 controller: controller,
-                hideCharacter: false,
-                highlight: true,
+                hideCharacter: true,
+                highlight: false,
+                textInputType: TextInputType.number,
                 highlightColor: Colors.blue,
                 defaultBorderColor: Colors.black,
                 hasTextBorderColor: Colors.blue,
@@ -82,13 +104,13 @@ class _EnterPinState extends State<EnterPin> {
                           ],
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Completed(
-                                      title: 'Process done',
-                                    )),
-                          );
+//                          Navigator.push(
+//                            context,
+//                            MaterialPageRoute(
+//                                builder: (context) => Completed(
+//                                      title: 'Process done',
+//                                    )),
+//                          );
                         },
                       ),
                     ),

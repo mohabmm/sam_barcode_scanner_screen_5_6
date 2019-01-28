@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:prototype_upwork/done.dart';
 
 typedef OnDone = void Function(String text);
 typedef PinBoxDecoration = BoxDecoration Function(Color borderColor);
@@ -32,8 +34,8 @@ class ProvidedPinBoxTextAnimation {
     return RotationTransition(
         child: DefaultTextStyleTransition(
           style: TextStyleTween(
-              begin: TextStyle(color: Colors.pink),
-              end: TextStyle(color: Colors.blue))
+                  begin: TextStyle(color: Colors.pink),
+                  end: TextStyle(color: Colors.blue))
               .animate(animation),
           child: ScaleTransition(
             child: child,
@@ -67,7 +69,10 @@ class ProvidedPinBoxTextAnimation {
 
 class PinCodeTextField extends StatefulWidget {
   final int maxLength;
+  final bool obscureText;
+
   final TextEditingController controller;
+  final TextInputFormatter inputFormatters;
   final bool hideCharacter;
   final bool highlight;
   final Color highlightColor;
@@ -78,18 +83,32 @@ class PinCodeTextField extends StatefulWidget {
   final double pinBoxHeight;
   final double pinBoxWidth;
   final OnDone onDone;
+  final TextInputType textInputType;
   final bool hasError;
   final Color errorBorderColor;
   final Color hasTextBorderColor;
+  final BlacklistingTextInputFormatter blacklistingTextInputFormatter;
   final Function(String) onTextChanged;
   final AnimatedSwitcherTransitionBuilder pinTextAnimatedSwitcherTransition;
   final Duration pinTextAnimatedSwitcherDuration;
+  final String amount;
+  final String paidTo;
+  final emitedBy;
+  final String dueDate;
 
   const PinCodeTextField({
+    this.amount,
+    this.paidTo,
+    this.emitedBy,
+    this.dueDate,
     Key key,
     this.maxLength: 4,
+    this.obscureText,
+    this.blacklistingTextInputFormatter,
+    this.textInputType,
     this.controller,
-    this.hideCharacter: false,
+    this.inputFormatters,
+    this.hideCharacter: true,
     this.highlight: false,
     this.highlightColor: Colors.black,
     this.pinBoxDecoration,
@@ -172,6 +191,10 @@ class PinCodeTextFieldState extends State<PinCodeTextField> {
       height: 0.1,
       child: TextField(
         focusNode: focusNode,
+        autofocus: true,
+        inputFormatters: <TextInputFormatter>[
+          WhitelistingTextInputFormatter.digitsOnly
+        ],
         controller: widget.controller,
         keyboardType: TextInputType.number,
         style: TextStyle(
@@ -184,6 +207,7 @@ class PinCodeTextFieldState extends State<PinCodeTextField> {
         cursorColor: Colors.transparent,
         maxLength: widget.maxLength,
         onChanged: _onTextChanged,
+        obscureText: true,
       ),
     );
   }
@@ -192,6 +216,7 @@ class PinCodeTextFieldState extends State<PinCodeTextField> {
     if (widget.onTextChanged != null) {
       widget.onTextChanged(text);
     }
+
     setState(() {
       this.text = text;
       if (text.length < currentIndex) {
@@ -203,8 +228,19 @@ class PinCodeTextFieldState extends State<PinCodeTextField> {
       currentIndex = text.length;
     });
     if (text.length == widget.maxLength) {
-      FocusScope.of(context).requestFocus(FocusNode());
-      widget.onDone(text);
+      setState(() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Completed(
+                    title: 'Process done',
+                    amount: widget.amount,
+                    paidTo: widget.paidTo,
+                    emitedBy: widget.emitedBy,
+                    dueDate: widget.dueDate,
+                  )),
+        );
+      });
     }
   }
 
@@ -236,10 +272,11 @@ class PinCodeTextFieldState extends State<PinCodeTextField> {
       borderColor = widget.defaultBorderColor;
     }
 
-    if (widget.pinBoxDecoration != null){
+    if (widget.pinBoxDecoration != null) {
       boxDecoration = widget.pinBoxDecoration(borderColor);
     } else {
-      boxDecoration = ProvidedPinBoxDecoration.defaultPinBoxDecoration(borderColor);
+      boxDecoration =
+          ProvidedPinBoxDecoration.defaultPinBoxDecoration(borderColor);
     }
 
     return Padding(

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prototype_upwork/confirmation_information.dart';
 import 'package:prototype_upwork/scan_qr/enter_barcode.dart';
-
-
 
 void main() => runApp(MyApp());
 
@@ -14,12 +11,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routes: <String, WidgetBuilder>{
-        '/confirmationInformation': (BuildContext context) =>
-            ConfirmationInformation(
-              title: 'Confirmation Information',
-            ),
-      },
       home: EnterBarcode(
         title: 'Type In Bar Code',
         isValid: (value) {

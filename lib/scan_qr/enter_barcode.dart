@@ -1,4 +1,3 @@
-import 'dart:_http';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -6,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fzxing/fzxing.dart';
+import 'package:prototype_upwork/confirmation_information.dart';
 import 'package:prototype_upwork/scan_qr/barcode_scanner.dart';
 import 'package:prototype_upwork/utils/const_widgets.dart';
 
@@ -24,12 +24,13 @@ class EnterBarcode extends StatefulWidget {
 class _EnterBarcodeState extends State<EnterBarcode> {
   var controller = new TextEditingController();
 
+  bool status;
   var textController = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
-//    textController.text = '846900000007511401090119003629373055001098054727';
+    // textController.text = '03399033204451350000740106501014977770000280385';
   }
 
   @override
@@ -48,7 +49,6 @@ class _EnterBarcodeState extends State<EnterBarcode> {
           IconButton(
             icon: Icon(Icons.camera_alt),
             tooltip: 'Scan',
-            // onPressed: _scan,
             onPressed: () {
               if (Platform.isAndroid) {
                 _scan();
@@ -67,6 +67,9 @@ class _EnterBarcodeState extends State<EnterBarcode> {
             children: <Widget>[
               new TextField(
                 controller: textController,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
                 style: new TextStyle(fontSize: largeText, color: Colors.black),
                 keyboardType: TextInputType.number,
                 maxLines: 1,
@@ -181,13 +184,43 @@ class _EnterBarcodeState extends State<EnterBarcode> {
 
       var url = 'http://localhost:4567/barcodeLookup';
 
+      // this one is recommended to use if you are testing on Emulator
+      //var url = 'http://' + '10.0.2.2' + ':4567/barcodeLookup';
+
       String response = await apiRequest(url, map);
+
+      print('Response status: ${response}');
+      print('Response body: ${response}');
 
       var data = json.decode(response);
       if (data['result'] == 'ok') {
+        print("the data result is " + data['result']);
+
+        if (data['variableAmount'] == true) {
+          print("the data variableAmount is " +
+              data['variableAmount'].toString());
+
+          status = true;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ConfirmationInformation(true)),
+          );
+        } else {
+          status = false;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ConfirmationInformation(false)),
+          );
+          print("the data variableAmount is " +
+              data['variableAmount'].toString());
+        }
         widget.isValid(true);
-        Navigator.of(context).pushNamed('/confirmationInformation');
+        //Navigator.of(context).pushNamed('/confirmationInformation');
       } else {
+        print("nottokkkk");
+
         // widget.isValid(false);
         invalidBarcodeDialog();
       }
@@ -195,13 +228,18 @@ class _EnterBarcodeState extends State<EnterBarcode> {
   }
 
   Future<String> apiRequest(String url, Map jsonMap) async {
+    print("the json map is " + jsonMap.toString());
+
+    print(url);
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
     request.add(utf8.encode(json.encode(jsonMap)));
     HttpClientResponse response = await request.close();
+    print("the response is " + response.toString());
     // todo - you should check the response.statusCode
     String reply = await response.transform(utf8.decoder).join();
+
     httpClient.close();
     return reply;
   }
@@ -233,7 +271,6 @@ class _EnterBarcodeState extends State<EnterBarcode> {
       MaterialPageRoute(builder: (context) => BarcodeScanner()),
     );
     textController.text = result;
-//    setState(() {});
     sendRequest(result);
   }
 
@@ -246,39 +283,10 @@ class _EnterBarcodeState extends State<EnterBarcode> {
           _barcode = barcodeResult;
           textController.text = _barcode[0];
           sendRequest(_barcode[0]);
-//    setState(() {});toString
-//    sendRequest(_barcodes[0].displayValue);
         });
       });
     } on PlatformException {
       _barcode.add('Failed to get barcode.');
     }
-//    List<Barcode> barcodes = [];
-//    try {
-//      barcodes = await FlutterMobileVision.scan(
-//        flash: false,
-//        autoFocus: true,
-//        formats: Barcode.ALL_FORMATS,
-//        multiple: false,
-//        waitTap: false,
-//        showText: true,
-////        preview: _previewBarcode,
-//        camera: FlutterMobileVision.CAMERA_BACK,
-//        fps: 15.0,
-//      );
-//    } on Exception {
-//      barcodes.add(new Barcode('Failed to get barcode.'));
-//    }
-//
-//    if (!mounted) return;
-//    _barcodes = barcodes;
-//    String barcodeString = '';
-//    for (Barcode barcode in _barcodes) {
-//      print(barcode.displayValue);
-//      barcodeString = barcodeString + barcode.displayValue;
-//    }
-//    textController.text = barcodeString;
-////    setState(() {});
-//    sendRequest(_barcodes[0].displayValue);
   }
 }

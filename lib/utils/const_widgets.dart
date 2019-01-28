@@ -23,22 +23,19 @@ xLargePaddingFromTop() {
   return Padding(padding: EdgeInsets.only(top: 20));
 }
 
-setLandscap()
-{
-   SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-}
-
-setPotrait()
-{
+setLandscap() {
   SystemChrome.setPreferredOrientations([
-   DeviceOrientation.portraitDown,
-   DeviceOrientation.portraitUp,
-]);
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
 }
 
+setPotrait() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
+}
 
 selected(bool selected) {
   if (selected) {

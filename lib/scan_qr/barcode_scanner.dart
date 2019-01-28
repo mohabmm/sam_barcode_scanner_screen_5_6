@@ -39,7 +39,7 @@ class BarcodeScannerState extends State<BarcodeScanner> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'Scan barcode',
+            'postion the bar code within this box ',
           ),
         ),
         body: new Column(
@@ -57,11 +57,7 @@ class BarcodeScannerState extends State<BarcodeScanner> {
                           if (readCode == null) {
                             readCode = code;
                             print('Barcode is:- ' + code);
-                            // callback(code);
                             Navigator.pop(context, code); //.pop(code);
-                            // Navigator.of(context).pop();
-
-                            // textController.text = code;
                           }
                         },
                       ),

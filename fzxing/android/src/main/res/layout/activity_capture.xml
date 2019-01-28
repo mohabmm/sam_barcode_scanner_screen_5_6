@@ -6,40 +6,72 @@
     android:keepScreenOn="true"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56sp"
-        android:background="#2196F3"
-        android:gravity="center"
-        android:text="Barcode Scanner"
-        android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="56sp"
+            android:background="#2196F3"
+            android:gravity="center"
+            android:text="Postion the bar code within this box "
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
 
 
         <com.journeyapps.barcodescanner.DecoratedBarcodeView
             android:id="@+id/scanner_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-            android:layout_above="@+id/tv_type_barcode" />
+    <LinearLayout
+        android:id="@+id/tv_Liniear_type_barcode"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        android:layout_weight="1"
+        android:gravity="center"
+
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_type_barcode"
-            android:layout_width="match_parent"
-            android:layout_height="56sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="center|bottom"
-            android:background="@android:color/darker_gray"
             android:gravity="center"
-            android:text="Type Barcode manually"
-            android:textColor="@android:color/white"
+            android:text="OR "
             android:textSize="20sp" />
 
-    </RelativeLayout>
+        <!--android:layout_gravity="center|bottom"-->
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/tv_type_barcode"
+            android:src="@drawable/bill" />
+
+        <TextView
+            android:id="@+id/tv_type_barcode2"
+            android:layout_width="wrap_content"
+            android:layout_height="56sp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="Type In Bar Code"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
 
 </LinearLayout><!--<?xml version="1.0" encoding="utf-8"?>
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
